@@ -38,14 +38,14 @@
         <osgi.compendium.version>6.0.0</osgi.compendium.version>
         <osgi.enterprise.version>5.0.0</osgi.enterprise.version>
 
-        <karaf.version>4.2.0</karaf.version>
+        <karaf.version>4.2.1</karaf.version>
 
         <slf4j.version>1.7.7</slf4j.version>
         <junit.version>4.12</junit.version>
 
         <derby.version>10.14.2.0</derby.version>
         
-        <cxf.version>3.2.4</cxf.version>
+        <cxf.version>3.2.6</cxf.version>
         <jackson.version>2.9.5</jackson.version>
     </properties>
 
@@ -55,7 +55,7 @@
     </modules>
 
     <prerequisites>
-        <maven>3.0.5</maven>
+        <maven>3.5</maven>
     </prerequisites>
 
     <repositories>
