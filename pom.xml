@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.apache</groupId>
         <artifactId>apache</artifactId>
-        <version>20</version>
+        <version>21</version>
     </parent>
 
     <groupId>fr.openobject.ana</groupId>
@@ -42,16 +42,12 @@
 
         <slf4j.version>1.7.7</slf4j.version>
         <junit.version>4.12</junit.version>
-
-        <derby.version>10.14.2.0</derby.version>
-        
-        <cxf.version>3.2.6</cxf.version>
-        <jackson.version>2.9.5</jackson.version>
     </properties>
 
     <modules>
     	<module>common</module>
     	<module>assembly</module>
+        <module>box</module>
     </modules>
 
     <prerequisites>
@@ -92,89 +88,6 @@
         <developerConnection>https://github.com/fpapon/ana</developerConnection>
         <url>https://github.com/fpapon/ana</url>
     </scm>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.felix</groupId>
-                    <artifactId>maven-bundle-plugin</artifactId>
-                    <version>3.5.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.karaf.tooling</groupId>
-                    <artifactId>karaf-services-maven-plugin</artifactId>
-                    <version>${karaf.version}</version>
-                    <executions>
-                        <execution>
-                            <id>service-metadata-generate</id>
-                            <phase>process-classes</phase>
-                            <goals>
-                                <goal>service-metadata-generate</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <inherited>true</inherited>
-                <extensions>true</extensions>
-                <configuration>
-                    <obrRepository>NONE</obrRepository>
-                    <instructions>
-                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-                    </instructions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>baseline</id>
-                        <goals>
-                            <goal>baseline</goal>
-                        </goals>
-                        <configuration>
-                            <comparisonVersion>1.0.0</comparisonVersion>
-                            <skip>true</skip>
-                            <failOnError>true</failOnError>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>[3.3.9,4)</version>
-                                </requireMavenVersion>
-                                <requireJavaVersion>
-                                    <version>[1.8,)</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencyManagement>
         <dependencies>
@@ -217,13 +130,6 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
-            </dependency>
-
-            <!-- Apache Derby -->
-            <dependency>
-                <groupId>org.apache.derby</groupId>
-                <artifactId>derby</artifactId>
-                <version>${derby.version}</version>
             </dependency>
 
             <!-- AnA features -->
@@ -306,5 +212,166 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.karaf.tooling</groupId>
+                    <artifactId>karaf-services-maven-plugin</artifactId>
+                    <version>${karaf.version}</version>
+                    <executions>
+                        <execution>
+                            <id>service-metadata-generate</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>service-metadata-generate</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>3.5.1</version>
+                <inherited>true</inherited>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <excludeSubProjects>false</excludeSubProjects>
+                    <useDefaultExcludes>true</useDefaultExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-services-maven-plugin</artifactId>
+                <version>${karaf.version}</version>
+                <executions>
+                    <execution>
+                        <id>service-metadata-generate</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>service-metadata-generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.3.9,4)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[1.8,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>rat</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.rat</groupId>
+                        <artifactId>apache-rat-plugin</artifactId>
+                        <version>0.12</version>
+                        <executions>
+                            <execution>
+                                <id>rat</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <reportFile>${project.build.directory}/${project.build.finalName}.rat</reportFile>
+                            <consoleOutput>true</consoleOutput>
+                            <excludeSubProjects>false</excludeSubProjects>
+                            <excludes>
+                                <exclude>**/*.iml</exclude>
+                                <exclude>**/*.project</exclude>
+                                <exclude>**/*.settings/*</exclude>
+                                <exclude>**/*.classpath</exclude>
+                                <exclude>**/target/**/*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>spotless</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.diffplug.spotless</groupId>
+                        <artifactId>spotless-maven-plugin</artifactId>
+                        <version>1.16.0</version>
+                        <executions>
+                            <execution>
+                                <id>spotless</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <java>
+                                <googleJavaFormat>
+                                    <version>1.6</version>
+                                    <style>AOSP</style>
+                                </googleJavaFormat>
+                                <removeUnusedImports/>
+                            </java>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+
+    <!--
+        Licensed to the xxx under one or more
+        contributor license agreements.  See the NOTICE file distributed with
+        this work for additional information regarding copyright ownership.
+        The xxx licenses this file to You under the Apache License, Version 2.0
+        (the "License"); you may not use this file except in compliance with
+        the License.  You may obtain a copy of the License at
+
+           http://www.apache.org/licenses/LICENSE-2.0
+
+        Unless required by applicable law or agreed to in writing, software
+        distributed under the License is distributed on an "AS IS" BASIS,
+        WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+        See the License for the specific language governing permissions and
+        limitations under the License.
+    -->
+
+    <id>ana</id>
+
+    <baseDirectory>ana-${project.version}</baseDirectory>
+
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <fileSets>
+
+        <!-- bin -->
+        <fileSet>
+            <directory>target/classes/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
+            <directoryMode>755</directoryMode>
+        </fileSet>
+
+        <!-- expanded Karaf -->
+        <fileSet>
+            <directory>target/karaf/apache-karaf-${karaf.version}</directory>
+            <outputDirectory>/</outputDirectory>
+            <excludes>
+                <exclude>**/demos/**</exclude>
+                <exclude>**/examples/**</exclude>
+                <exclude>bin/**</exclude>
+                <exclude>etc/system.properties</exclude>
+                <exclude>etc/org.apache.karaf.features.cfg</exclude>
+                <exclude>etc/org.apache.karaf.features.repos.cfg</exclude>
+                <exclude>etc/org.ops4j.pax.url.mvn.cfg</exclude>
+                <exclude>README</exclude>
+                <exclude>RELEASE-NOTES</exclude>
+                <exclude>LICENSE</exclude>
+                <exclude>NOTICE</exclude>
+                <exclude>karaf-manual*.html</exclude>
+                <exclude>karaf-manual*.pdf</exclude>
+            </excludes>
+        </fileSet>
+
+        <!-- Copy over unix bin/* separately to get the correct file mode -->
+        <fileSet>
+            <directory>target/karaf/apache-karaf-${karaf.version}/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <includes>
+                <include>setenv</include>
+            </includes>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
+            <directoryMode>777</directoryMode>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0755</fileMode>
+            <directoryMode>777</directoryMode>
+        </fileSet>
+
+        <!-- copy config files to etc -->
+        <fileSet>
+            <directory>src/main/etc</directory>
+            <outputDirectory>/etc</outputDirectory>
+            <fileMode>0644</fileMode>
+            <directoryMode>777</directoryMode>
+        </fileSet>
+        <fileSet>
+            <directory>target/classes/etc</directory>
+            <outputDirectory>/etc/</outputDirectory>
+            <lineEnding>unix</lineEnding>
+            <fileMode>0644</fileMode>
+            <directoryMode>777</directoryMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>target/features-repo</directory>
+            <outputDirectory>/system</outputDirectory>
+        </fileSet>
+
+
+    </fileSets>
+
+</assembly>

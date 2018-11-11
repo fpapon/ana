@@ -28,7 +28,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>fr.openobject.ana</groupId>
     <artifactId>ana-assembly</artifactId>
     <packaging>pom</packaging>
     <name>AnA :: Assembly</name>
@@ -66,7 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.0</version>
                 <configuration>
                     <useDefaultDelimiters>false</useDefaultDelimiters>
                     <delimiters>

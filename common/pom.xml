@@ -28,7 +28,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>fr.openobject.ana</groupId>
     <artifactId>fr.openobject.ana.common</artifactId>
     <packaging>bundle</packaging>
     <name>AnA :: Common</name>

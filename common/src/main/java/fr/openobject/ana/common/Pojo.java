@@ -16,9 +16,6 @@
  */
 package fr.openobject.ana.common;
 
-import java.util.Collection;
-import java.util.Map;
-
 /**
  * This is a Pojo view.
  */
