@@ -16,9 +16,7 @@
  */
 package fr.openobject.ana.common;
 
-/**
- * This is a Pojo view.
- */
+/** This is a Pojo view. */
 public class Pojo {
 
     /** Unique ID */

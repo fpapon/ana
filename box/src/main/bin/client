@@ -17,17 +17,42 @@
 #
 
 realpath() {
-  OURPWD=${PWD}
-  cd "$(dirname "${1}")" || exit 2
-  LINK=$(ls -l "$(basename "${1}")" | awk -F"-> " '{print $2}')
-  while [ "${LINK}" ]; do
-	  echo "link: ${LINK}" >&2
-    cd "$(dirname "${LINK}")" || exit 2
-    LINK=$(ls -l "$(basename "${1}")" | awk -F"-> " '{print $2}')
-  done
-  REALPATH="${PWD}/$(basename "${1}")"
-  cd "${OURPWD}" || exit 2
-  echo "${REALPATH}"
+  # Use in priority xpg4 awk or nawk on SunOS as standard awk is outdated
+  AWK=awk
+  if ${solaris}; then
+      if [ -x /usr/xpg4/bin/awk ]; then
+          AWK=/usr/xpg4/bin/awk
+      elif [ -x /usr/bin/nawk ]; then
+          AWK=/usr/bin/nawk
+      fi
+  fi
+
+  READLINK_EXISTS=$(command -v readlink &> /dev/null)
+  if [ -z "$READLINK_EXISTS" ]; then
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    while [ "${LINK}" ]; do
+        echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(ls -l "$(basename "${1}")" | ${AWK} -F"-> " '{print $2}')
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  else
+    OURPWD=${PWD}
+    cd "$(dirname "${1}")" || exit 2
+    LINK=$(readlink "$(basename "${1}")")
+    while [ "${LINK}" ]; do
+            echo "link: ${LINK}" >&2
+        cd "$(dirname "${LINK}")" || exit 2
+        LINK=$(readlink "$(basename "${1}")")
+    done
+    REALPATH="${PWD}/$(basename "${1}")"
+    cd "${OURPWD}" || exit 2
+    echo "${REALPATH}"
+  fi
 }
 
 REALNAME=$(realpath "$0")
@@ -50,7 +75,7 @@ fi
 
 setupClassPath() {
     # Add the jars in the lib dir
-    CLASSPATH="${KARAF_HOME}/system/org/apache/karaf/org.apache.karaf.client/4.2.1/org.apache.karaf.client-4.2.1.jar"
+    CLASSPATH="${KARAF_HOME}/system/org/apache/karaf/org.apache.karaf.client/4.2.2-SNAPSHOT/org.apache.karaf.client-4.2.2-SNAPSHOT.jar"
     CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/apache/sshd/sshd-core/1.7.0/sshd-core-1.7.0.jar"
     CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/fusesource/jansi/jansi/1.17.1/jansi-1.17.1.jar"
     CLASSPATH="${CLASSPATH}:${KARAF_HOME}/system/org/jline/jline/3.9.0/jline-3.9.0.jar"
